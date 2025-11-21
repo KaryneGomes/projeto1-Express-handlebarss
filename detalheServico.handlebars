@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhes do Agendamento</title>
+
+    <style>
+        body { font-family: Arial; background: #ffe6ff; padding: 20px; text-align: center; }
+        .card {
+            width: 450px; margin: auto; background: white; padding: 20px;
+            border-radius: 15px; box-shadow: 0 0 12px #c052c7;
+        }
+        h1 { color: #7a008c; }
+        .btn {
+            background: #7a008c; color: white; padding: 10px 15px;
+            text-decoration: none; border-radius: 8px; display: inline-block;
+            margin-top: 15px;
+        }
+        .btn:hover { background: #a400b8; }
+    </style>
+</head>
+
+<body>
+
+    <h1>Detalhes do Agendamento</h1>
+
+    <div class="card">
+
+        <p><b>Cliente:</b> {{ag.clienteNome}}</p>
+        <p><b>Serviço:</b> {{ag.servicoNome}}</p>
+        <p><b>Horário:</b> {{ag.horario}}</p>
+        <p><b>ID:</b> {{ag.id}}</p>
+
+        <a class="btn" href="/agendamentos/editar/{{ag.id}}">Editar</a><br><br>
+        <a href="/agendamentos">⬅ Voltar</a>
+
+    </div>
+
+</body>
+</html>
