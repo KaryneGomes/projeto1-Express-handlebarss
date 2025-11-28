@@ -1,21 +1,16 @@
-arquivo server.js
 
 const express = require('express');
-const exphbs = require('express-handlebars');
-const bodyParser = require('body-parser');
+const exphbs = require ('express-handlebars');
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static("public")); // pasta pública
+app.use(express.urlencoded ({ extended: true}));
 
-
-app.engine('handlebars', exphbs.engine({ defaultLayout: false }));
+app.engine('handlebars', exphbs.engine({defaultLayout: false}));
 app.set('view engine', 'handlebars');
-app.set('views', './views'); // pasta das views
+
 
 
 let servicos = [];
@@ -32,52 +27,36 @@ app.get("/", (req, res) => {
 });
 
 
-// ROTAS DE SERVIÇOS
-
+// SERVIÇos
 app.get("/servicos", (req, res) => {
   res.render("servicos/listar", { servicos });
 });
 
-// Rota para criar novo serviço (formulário)
-app.get("/servicos/novo", (req, res) => {
-  res.render("servicos/novo");
-});
-
-// Criar serviço (POST)
 app.post("/servicos/criar", (req, res) => {
-  servicos.push({ id: idServico++, nome: req.body.nome, preco: req.body.preco });
+  servicos.push({
+    id: idServico++,
+    nome: req.body.nome
+  });
   res.redirect("/servicos");
 });
 
 app.get("/servicos/editar/:id", (req, res) => {
-  const servico = servicos.find(s => s.id === Number(req.params.id));
-  if (!servico) return res.send("Serviço não encontrado.");
+  const servico = servicos.find(s => s.id == req.params.id);
   res.render("servicos/editar", { servico });
 });
 
 app.post("/servicos/atualizar/:id", (req, res) => {
-  const servico = servicos.find(s => s.id === Number(req.params.id));
-  if (!servico) return res.send("Serviço não encontrado.");
+  const servico = servicos.find(s => s.id == req.params.id);
   servico.nome = req.body.nome;
-  servico.preco = req.body.preco;
   res.redirect("/servicos");
 });
 
 app.get("/servicos/remover/:id", (req, res) => {
-  servicos = servicos.filter(s => s.id !== Number(req.params.id));
+  servicos = servicos.filter(s => s.id != req.params.id);
   res.redirect("/servicos");
 });
 
-// Ver detalhes de um serviço
-app.get("/servicos/ver/:id", (req, res) => {
-  const servico = servicos.find(s => s.id === Number(req.params.id));
-  if (!servico) return res.send("Serviço não encontrado.");
-  res.render("servicos/servico-ver", { servico });
-});
-
-
-// ROTAS DE CLIENTES
-
+// CLIENTES
 app.get("/clientes", (req, res) => {
   res.render("clientes/listar", { clientes });
 });
@@ -91,50 +70,52 @@ app.post("/clientes/criar", (req, res) => {
   res.redirect("/clientes");
 });
 
+app.get("/clientes/detalhes/:id", (req, res) => {
+  const cliente = clientes.find(c => c.id == req.params.id);
+
+  const agendaDoCliente = agendamentos
+    .filter(a => a.clienteId == cliente.id)
+    .map(a => ({
+      ...a,
+      servico: servicos.find(s => s.id == a.servicoId)?.nome
+    }));
+
+  res.render("clientes/detalhes", { cliente, agendaDoCliente });
+});
+
 app.get("/clientes/editar/:id", (req, res) => {
-  const cliente = clientes.find(c => c.id === Number(req.params.id));
-  if (!cliente) return res.send("Cliente não encontrado.");
+  const cliente = clientes.find(c => c.id == req.params.id);
   res.render("clientes/editar", { cliente });
 });
 
 app.post("/clientes/atualizar/:id", (req, res) => {
-  const cliente = clientes.find(c => c.id === Number(req.params.id));
-  if (!cliente) return res.send("Cliente não encontrado.");
+  const cliente = clientes.find(c => c.id == req.params.id);
   cliente.nome = req.body.nome;
   cliente.telefone = req.body.telefone;
   res.redirect("/clientes");
 });
 
 app.get("/clientes/remover/:id", (req, res) => {
-  clientes = clientes.filter(c => c.id !== Number(req.params.id));
-  agendamentos = agendamentos.filter(a => a.clienteId !== Number(req.params.id));
+  clientes = clientes.filter(c => c.id != req.params.id);
+  agendamentos = agendamentos.filter(a => a.clienteId != req.params.id);
   res.redirect("/clientes");
 });
 
-// Ver detalhes de um cliente
-app.get("/clientes/ver/:id", (req, res) => {
-  const cliente = clientes.find(c => c.id === Number(req.params.id));
-  if (!cliente) return res.send("Cliente não encontrado.");
-  const agendaDoCliente = agendamentos
-    .filter(a => a.clienteId === cliente.id)
-    .map(a => ({ ...a, servico: servicos.find(s => s.id === a.servicoId)?.nome }));
-  res.render("clientes/cliente-ver", { cliente, agendaDoCliente });
-});
-
-
-// ROTAS DE AGENDAMENTOS
-
+// AGENDAMENTOS
 app.get("/agendamentos", (req, res) => {
   const lista = agendamentos.map(a => ({
     ...a,
-    cliente: clientes.find(c => c.id === a.clienteId)?.nome,
-    servico: servicos.find(s => s.id === a.servicoId)?.nome
+    cliente: clientes.find(c => c.id == a.clienteId)?.nome,
+    servico: servicos.find(s => s.id == a.servicoId)?.nome
   }));
   res.render("agendamentos/listar", { agendamentos: lista });
 });
 
 app.get("/agendamentos/criar", (req, res) => {
-  res.render("agendamentos/criar", { clientes, servicos });
+  res.render("agendamentos/criar", {
+    clientes,
+    servicos
+  });
 });
 
 app.post("/agendamentos/criar", (req, res) => {
@@ -144,50 +125,64 @@ app.post("/agendamentos/criar", (req, res) => {
     clienteId: Number(req.body.clienteId),
     servicoId: Number(req.body.servicoId)
   });
+
   res.redirect("/agendamentos");
 });
 
+app.get("/agendamentos/detalhes/:id", (req, res) => {
+  const a = agendamentos.find(ag => ag.id == req.params.id);
+  const info = {
+    ...a,
+    cliente: clientes.find(c => c.id == a.clienteId)?.nome,
+    servico: servicos.find(s => s.id == a.servicoId)?.nome
+  };
+  res.render("agendamentos/detalhes", { agendamento: info });
+});
+
 app.get("/agendamentos/editar/:id", (req, res) => {
-  const agendamento = agendamentos.find(a => a.id === Number(req.params.id));
-  if (!agendamento) return res.send("Agendamento não encontrado.");
-  res.render("agendamentos/editar", { agendamento, clientes, servicos });
+  const agendamento = agendamentos.find(a => a.id == req.params.id);
+
+  res.render("agendamentos/editar", {
+    agendamento,
+    clientes,
+    servicos
+  });
 });
 
 app.post("/agendamentos/atualizar/:id", (req, res) => {
-  const a = agendamentos.find(ag => ag.id === Number(req.params.id));
-  if (!a) return res.send("Agendamento não encontrado.");
+  const a = agendamentos.find(ag => ag.id == req.params.id);
+
   a.horario = req.body.horario;
   a.clienteId = Number(req.body.clienteId);
   a.servicoId = Number(req.body.servicoId);
+
   res.redirect("/agendamentos");
 });
 
 app.get("/agendamentos/remover/:id", (req, res) => {
-  agendamentos = agendamentos.filter(a => a.id !== Number(req.params.id));
+  agendamentos = agendamentos.filter(a => a.id != req.params.id);
   res.redirect("/agendamentos");
 });
 
-// Ver detalhes de um agendamento
-app.get("/agendamentos/ver/:id", (req, res) => {
-  const agendamento = agendamentos.find(a => a.id === Number(req.params.id));
-  if (!agendamento) return res.send("Agendamento não encontrado.");
-  const ag = {
-    ...agendamento,
-    cliente: clientes.find(c => c.id === agendamento.clienteId)?.nome,
-    servico: servicos.find(s => s.id === agendamento.servicoId)?.nome
-  };
-  res.render("agendamento-ver", { ag });
-});
-
-
 // HORÁRIOS DISPONÍVEIS
-
 app.get("/agendamentos/disponiveis", (req, res) => {
-  const horarios = ["08:00","09:00","10:00","11:00","13:00","14:00","15:00","16:00","17:00"];
+  const horarios = [
+    "08:00", "09:00", "10:00", "11:00",
+    "13:00", "14:00", "15:00", "16:00", "17:00"
+  ];
+
   const ocupados = agendamentos.map(a => a.horario);
   const livres = horarios.filter(h => !ocupados.includes(h));
+
   res.render("agendamentos/disponiveis", { livres });
 });
-app.listen(port, () => {
-  console.log(`SERVIDOR RODANDO http://localhost:${port}`);
+
+
+
+
+
+
+
+app.listen(3000, () => {
+  console.log("SERVIDOR RODANDO http://localhost:3000");
 });

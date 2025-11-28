@@ -1,0 +1,31 @@
+<h2>Clientes</h2>
+
+<form action="/clientes/criar" method="POST" class="form-medio">
+    <input type="text" name="nome" placeholder="Nome" required>
+    <input type="text" name="telefone" placeholder="Telefone" required>
+    <button type="submit">Cadastrar</button>
+</form>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Telefone</th>
+        <th>Ações</th>
+    </tr>
+
+    {{#each clientes}}
+    <tr>
+        <td>{{id}}</td>
+        <td>{{nome}}</td>
+        <td>{{telefone}}</td>
+        <td>
+            <a href="/clientes/detalhes/{{id}}">Detalhes</a>
+            <a href="/clientes/editar/{{id}}" class="editar">Editar</a>
+            <a href="/clientes/remover/{{id}}" class="deletar">Excluir</a>
+        </td>
+    </tr>
+    {{/each}}
+</table>
+
+<a href="/" class="voltar">← Voltar</a>

@@ -1,0 +1,9 @@
+<h2>Editar Cliente</h2>
+
+<form action="/clientes/atualizar/{{cliente.id}}" method="POST" class="form-medio">
+    <input type="text" name="nome" value="{{cliente.nome}}" required>
+    <input type="text" name="telefone" value="{{cliente.telefone}}" required>
+    <button type="submit">Salvar</button>
+</form>
+
+<a href="/clientes" class="voltar">← Voltar</a>

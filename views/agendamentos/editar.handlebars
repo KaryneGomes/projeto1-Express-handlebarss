@@ -1,0 +1,29 @@
+<h2>Editar Agendamento</h2>
+
+<form action="/agendamentos/atualizar/{{agendamento.id}}" method="POST" class="form-medio">
+
+    <label>Cliente:</label>
+    <select name="clienteId">
+        {{#each clientes}}
+        <option value="{{id}}" {{#ifCond id ../agendamento.clienteId}}selected{{/ifCond}}>
+            {{nome}}
+        </option>
+        {{/each}}
+    </select>
+
+    <label>Serviço:</label>
+    <select name="servicoId">
+        {{#each servicos}}
+        <option value="{{id}}" {{#ifCond id ../agendamento.servicoId}}selected{{/ifCond}}>
+            {{nome}}
+        </option>
+        {{/each}}
+    </select>
+
+    <label>Horário:</label>
+    <input type="time" name="horario" value="{{agendamento.horario}}" required>
+
+    <button type="submit">Salvar</button>
+</form>
+
+<a href="/agendamentos" class="voltar">← Voltar</a>

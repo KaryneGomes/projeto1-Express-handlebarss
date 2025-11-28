@@ -1,0 +1,18 @@
+<h2>Detalhes do Cliente</h2>
+
+<p><strong>Nome:</strong> {{cliente.nome}}</p>
+<p><strong>Telefone:</strong> {{cliente.telefone}}</p>
+
+<h3>Agendamentos deste cliente:</h3>
+
+<ul>
+    {{#each agendaDoCliente}}
+    <li>
+        {{horario}} - {{servico}}
+    </li>
+    {{else}}
+    <p>Este cliente não possui agendamentos.</p>
+    {{/each}}
+</ul>
+
+<a href="/clientes" class="voltar">← Voltar</a>

@@ -1,0 +1,31 @@
+<h2>Agendamentos</h2>
+
+<a href="/agendamentos/criar" class="botao">Criar Agendamento</a>
+<a href="/agendamentos/disponiveis" class="botao">Ver horários disponíveis</a>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Cliente</th>
+        <th>Serviço</th>
+        <th>Horário</th>
+        <th>Ações</th>
+    </tr>
+
+    {{#each agendamentos}}
+    <tr>
+        <td>{{id}}</td>
+        <td>{{cliente}}</td>
+        <td>{{servico}}</td>
+        <td>{{horario}}</td>
+
+        <td>
+            <a href="/agendamentos/detalhes/{{id}}">Detalhes</a>
+            <a href="/agendamentos/editar/{{id}}" class="editar">Editar</a>
+            <a href="/agendamentos/remover/{{id}}" class="deletar">Excluir</a>
+        </td>
+    </tr>
+    {{/each}}
+</table>
+
+<a href="/" class="voltar">← Voltar</a>

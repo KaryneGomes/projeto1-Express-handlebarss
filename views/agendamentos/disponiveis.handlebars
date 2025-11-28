@@ -1,0 +1,11 @@
+<h2>Horários Disponíveis</h2>
+
+<ul class="lista-disponiveis">
+    {{#each livres}}
+    <li>{{this}}</li>
+    {{else}}
+    <p>Nenhum horário disponível.</p>
+    {{/each}}
+</ul>
+
+<a href="/agendamentos" class="voltar">← Voltar</a>

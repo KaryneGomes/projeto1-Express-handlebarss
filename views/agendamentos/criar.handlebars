@@ -1,0 +1,25 @@
+<h2>Novo Agendamento</h2>
+
+<form action="/agendamentos/criar" method="POST" class="form-medio">
+
+    <label>Cliente:</label>
+    <select name="clienteId" required>
+        {{#each clientes}}
+        <option value="{{id}}">{{nome}}</option>
+        {{/each}}
+    </select>
+
+    <label>Serviço:</label>
+    <select name="servicoId" required>
+        {{#each servicos}}
+        <option value="{{id}}">{{nome}}</option>
+        {{/each}}
+    </select>
+
+    <label>Horário:</label>
+    <input type="time" name="horario" required>
+
+    <button type="submit">Agendar</button>
+</form>
+
+<a href="/agendamentos" class="voltar">← Voltar</a>

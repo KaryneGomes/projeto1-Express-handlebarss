@@ -1,0 +1,8 @@
+<h2>Editar Serviço</h2>
+
+<form action="/servicos/atualizar/{{servico.id}}" method="POST" class="form-pequeno">
+    <input type="text" name="nome" value="{{servico.nome}}" required>
+    <button type="submit">Salvar</button>
+</form>
+
+<a href="/servicos" class="voltar">← Voltar</a>
